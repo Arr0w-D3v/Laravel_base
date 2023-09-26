@@ -37,6 +37,17 @@ class ProductsController extends Controller
      */
     public function store(Request $request)
     {
+        //dd($request->all());$
+            $request->validate([
+                'name' => 'required|min:3|max:255|unique:products,name',
+                'description' => 'required|min:3|max:255',
+                'price' => 'required|numeric|between:100,400',
+                'stock' => 'required|numeric',
+                'is_active' => 'required|boolean',
+            ]);
+
+
+
             $input = $request->all();
             $input['is_active'] = true;
             $input['stock'] = 0;    

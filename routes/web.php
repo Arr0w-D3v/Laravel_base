@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,13 +18,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/* Route::get(
-    '/products', [\App\Http\Controllers\ProductsController::class, 'index']);
-Route::post(
-    '/products', [\App\Http\Controllers\ProductsController::class, 'store']); */
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resources([
-    'products' => \App\Http\Controllers\ProductsController::class,
-]);
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::resources([
+        'products' => \App\Http\Controllers\ProductsController::class,
+    ]);
+});
 
-//Route::get('/products/{product}/images', [\App\Http\Controllers\ProductsController::class, 'images']);
+require __DIR__.'/auth.php';

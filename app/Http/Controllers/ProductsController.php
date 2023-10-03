@@ -42,20 +42,13 @@ class ProductsController extends Controller
                 'name' => 'required|min:3|max:255|unique:products,name',
                 'description' => 'required|min:3|max:255',
                 'price' => 'required|numeric|between:100,400',
-                'stock' => 'required|numeric',
-                'is_active' => 'required|boolean',
             ]);
-
-
-
             $input = $request->all();
             $input['is_active'] = true;
             $input['stock'] = 0;    
-
-
             $product = Product::create($input);
     
-            return $product;
+            return redirect()->route('products.index');
     }
 
     /**
@@ -63,10 +56,10 @@ class ProductsController extends Controller
      */
     public function show(Product $product)
     {
-
+        $title = 'Détail du produit';
        // $product = Product::select('id', 'name')->where('id', $product->id)->first();
 
-        return $product;
+        return view('products.show', compact('title', 'product'));
     }
 
     /**
@@ -74,7 +67,9 @@ class ProductsController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $title = 'Modifier le produit';
+
+        return view('products.edit', compact('title', 'product'));
     }
 
     /**
@@ -82,10 +77,20 @@ class ProductsController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+
+        $request->validate([
+            'name' => 'required|min:3|max:255', 
+            'description' => 'required|min:3',
+            'price' => 'required|numeric|between:0,400000',
+        ]);
        
         $product->update($request->all());
 
-        return $product;
+        if($product->wasChanged()){
+            return redirect()->route('products.show', $product)->with('success', 'Le produit a bien été modifié');
+        }else{
+            return redirect()->route('products.show', $product)->with('warning', 'Aucune modification n\'a été effectuée');
+        }
     }
 
     /**
@@ -95,6 +100,6 @@ class ProductsController extends Controller
     {
         $product->delete();
 
-        return $product;
+        return redirect()->route('products.index')->with('success', 'Le produit a bien été supprimé');
     }
 }

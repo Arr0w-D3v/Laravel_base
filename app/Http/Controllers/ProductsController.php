@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,6 @@ class ProductsController extends Controller
     public function index()
     {
         $products = Product::all();
-
-
         //$products = Product::select('id', 'name')->where('is_active', true)->get();
         $title = 'Liste des produits';
 

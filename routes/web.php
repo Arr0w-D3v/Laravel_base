@@ -28,6 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resources([
         'products' => \App\Http\Controllers\ProductsController::class,
+        'categories' => \App\Http\Controllers\CategoriesController::class,
+        'movies' => \App\Http\Controllers\MoviesController::class,
     ]);
 });
 

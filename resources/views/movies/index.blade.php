@@ -3,7 +3,7 @@
 @section('content')
     <h1 class="text-5xl font-semibold text-center text-gray-900 dark:text-white sm:text-6xl md:text-7xl">{{ $title }}
     </h1>
-    <a href="{{ route('products.create') }}"
+    <a href="{{ route('movies.create') }}"
         class="text-2xl font-semibold text-center text-gray-900 dark:text-white sm:text-3xl md:text-4xl">Create Product</a>
     <table class="table-auto">
         <thead>
@@ -12,6 +12,7 @@
                 <th class="px-4 py-2">Category</th>
                 <th class="px-4 py-2">Description</th>
                 <th class="px-4 py-2">Slug</th>
+                <th class="px-4 py-2">Actors</th>
                 <th class="px-4 py-2">Active</th>
                 <th class="px-4 py-2">Actions</th>
             </tr>
@@ -22,7 +23,11 @@
                     <td class="border px-4 py-2">{{ $movie->title }}</td>
                     <td>{{ $movie->category->name }}</td>
                     <td class="border px-4 py-2">{{ $movie->description }}</td>
-                    <td class="border px-4 py-2">{{ $movie->slug }} €</td>
+                    <td class="border px-4 py-2">{{ $movie->slug }}</td>
+                    <td class="border px-4 py-2">
+                        @foreach ($movie->actors as $actor)
+                            {{ $actor->firstname }} {{ $actor->lastname }}<br>
+                        @endforeach
                     <td class="border px-4 py-2">{{ $movie->is_active }}</td>
                     <td class="border px-4 py-2">
                         <a href="{{ route('movies.show', $movie->id) }}"

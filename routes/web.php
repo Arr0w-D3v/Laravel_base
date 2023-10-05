@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
         'products' => \App\Http\Controllers\ProductsController::class,
         'categories' => \App\Http\Controllers\CategoriesController::class,
         'movies' => \App\Http\Controllers\MoviesController::class,
+        'actors' => \App\Http\Controllers\ActorsController::class,
     ]);
 });
 

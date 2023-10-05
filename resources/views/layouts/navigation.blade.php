@@ -25,6 +25,10 @@
                         {{ __('Movies') }}
 
                     </x-nav-link>
+                    <x-nav-link :href="route('actors.index')" :active="request()->routeIs('actors.index')">
+                        {{ __('Actors') }}
+
+                    </x-nav-link>
                 </div>
             </div>
 

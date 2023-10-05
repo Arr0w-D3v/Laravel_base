@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Str;
+use App\Models\Actor;
 use App\Models\Movie;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class MoviesController extends Controller
@@ -12,9 +15,9 @@ class MoviesController extends Controller
      */
     public function index()
     {
-        $movies = Movie::with('category')->get();
+        $movies = Movie::with('category', 'actors')->get();
 
-        //dd($movies)
+       // dd($movies);
 
         $title = 'Liste des films';
 
@@ -26,7 +29,12 @@ class MoviesController extends Controller
      */
     public function create()
     {
-        //
+        $title = 'Ajouter un film';
+
+        $categories = Category::where('is_active', true)->get();
+        $actors = Actor::all();
+
+        return view('movies.create', compact('title', 'categories', 'actors'));
     }
 
     /**
@@ -34,7 +42,16 @@ class MoviesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        //dd($request->all());
+        $input = $request->all();
+        $input['slug'] = Str::slug($request->title);
+
+        $movie = Movie::create($input);
+
+        $movie->actors()->attach($request->actors);
+
+        return redirect()->route('movies.index');
     }
 
     /**
@@ -50,7 +67,11 @@ class MoviesController extends Controller
      */
     public function edit(Movie $movie)
     {
-        //
+        $title = 'Modifier un film';
+        $categories = Category::where('is_active', true)->get();
+        $actors = Actor::all();
+
+        return view('movies.edit', compact('title', 'categories', 'actors', 'movie'));
     }
 
     /**
@@ -58,7 +79,14 @@ class MoviesController extends Controller
      */
     public function update(Request $request, Movie $movie)
     {
-        //
+        $input = $request->all();
+        $input['slug'] = Str::slug($request->title);
+
+        $movie->update($input);
+
+        $movie->actors()->sync($request->actors);
+
+        return redirect()->route('movies.index');
     }
 
     /**
@@ -66,6 +94,12 @@ class MoviesController extends Controller
      */
     public function destroy(Movie $movie)
     {
-        //
+        $movie->actors()->detach();
+
+        $movie->delete();
+
+
+
+        return redirect()->route('movies.index');
     }
 }
